@@ -5,30 +5,27 @@
 const {createStore} = require('redux')
 
 const reducer = (state, action) => {
-    switch (action.type) {
-        case 'ADD_RESPONSE':
-            return {
-                responses: [...state.responses, action.payload.response]
-            }
-        default: return state
-    }
+  switch (action.type) {
+    case 'INC':
+      return {
+        count: state.count + 1
+      }
+    default:
+      return state
+  }
+  return state
 }
 
 const initialState = {
-    responses: []
+  count: 0
 }
 
 const store = createStore(reducer, initialState)
 
 store.subscribe(function() {
-    console.log(store.getState())
+  console.log(store.getState())
 })
 
 store.dispatch({
-    type: 'ADD_RESPONSE',
-    payload: {
-        response: {
-            id: '001'
-        }
-    }
+  type: 'INC',
 })

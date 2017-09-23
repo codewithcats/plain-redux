@@ -4,13 +4,30 @@
 
 const {createStore, applyMiddleware} = require('redux')
 const createSagaMiddleware = require('redux-saga').default
-const {all, fork, take} = require('redux-saga/effects')
+const {take, call, put} = require('redux-saga/effects')
 const axios = require('axios')
+
+function fetchLeagues() {
+  return axios({
+    url: 'https://sportsop-soccer-sports-open-data-v1.p.mashape.com/v1/leagues',
+    headers: {
+      'X-Mashape-Key': 'ZqAO9XW13qmshFt97YltTFOOGDjhp1dHh00jsnD8ztb0FcWmpG',
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => response.data.data.leagues)
+}
 
 function* fetchLeaguesSaga() {
     while (true) {
         yield take('FETCH_LEAGUES')
-        console.log('fetch leagues saga')
+        const leagues = yield call(fetchLeagues)
+        yield put({
+          type: 'LEAGUES',
+          payload: {
+            leagues
+          }
+        })
     }
 }
 
